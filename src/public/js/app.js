@@ -2,18 +2,17 @@
 const socket = io(); // automatically running the server socketIO
 const welcome = document.getElementById("welcome")
 const roomForm = welcome.querySelector("form");
-
 const room = document.getElementById("room");
+const nameForm = welcome.querySelector("#name");
 room.hidden = true;
 let roomName = "";
-
-const nameForm = welcome.querySelector("#name");
 
 function backendDone(){
     console.log('backend done');
 };
 
 // ====== First Main Page ====== //
+// ============================= //
 // 1) Enter the room number that user wants to enter
 // 2) Display the room number and trigger showRoom function
 function handleRoomSubmit(event){
@@ -40,6 +39,8 @@ roomForm.addEventListener("submit", handleRoomSubmit);
 nameForm.addEventListener("submit", handleNickNameSubmit); // to submit message
 
 
+// ===== Second Landing Page ===== //
+// ============================= //
 // 1) hide the room enter block and display message enter block
 // 2) Clicking 'Send' button will triggeer handleMessageSubmit function
 function showRoom(){
@@ -76,9 +77,6 @@ function handleMessageSubmit(event){
     });
 };
 
-
-
-
 // Events sent from the server, socket.emit events
 // backend signals to trigger function from the frontend
 
@@ -96,9 +94,7 @@ socket.on("bye", (user, newCount) => {
 
 socket.on("new_message", addMessage); // have to study more on this part
 
-//socket.on("room_change", (msg) => console.log(msg));
-// console.log == (msg) => console.log(msg)
-
+// handle changes happening inside the room -> enter, exit, show available rooms
 socket.on("room_change", (rooms) => {
     const roomList = welcome.querySelector("ul");
     let roomAvail = welcome.querySelector("h4");

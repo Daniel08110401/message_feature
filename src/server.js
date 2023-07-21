@@ -2,7 +2,11 @@ import express from "express";
 import http from "http";
 // import WebSocket from "ws";
 import {WebSocketServer} from "ws";
-import SocketIO from "socket.io";
+// import SocketIO from "socket.io";
+const { Server } = require("socket.io");
+const { instrument } = require("@socket.io/admin-ui");
+
+
 const app = express();
 
 // part for the express.js
@@ -67,7 +71,17 @@ const sockets = [];
 
 // ======= Socket IO ======= //
 const httpServer = http.createServer(app);
-const wsServer = SocketIO(httpServer);
+const wsServer = new Server(httpServer, {
+    cors: {
+        origin: ["https://admin.socket.io"],
+        credentials: true
+    }
+});
+
+instrument(wsServer, {
+    auth: false,
+    mode: "development",
+});
 
 // to give public rooms
 
