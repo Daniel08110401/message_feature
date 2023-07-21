@@ -33,7 +33,7 @@ function handleNickNameSubmit(event){
     event.preventDefault();
     const input = welcome.querySelector("#name input");
     socket.emit("nick_name", input.value);
-    console.log("nickname function executed");
+    // console.log("nickname function executed");
 };
 
 roomForm.addEventListener("submit", handleRoomSubmit);
@@ -79,17 +79,42 @@ function handleMessageSubmit(event){
 
 
 
-
-
 // Events sent from the server, socket.emit events
 // backend signals to trigger function from the frontend
 
-socket.on('welcome', (user) => {
+socket.on('welcome', (user, newCount) => {
     addMessage(`${user} joined`);
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} : ${newCount}`;
 });
 
-socket.on("bye", (user) => {
+socket.on("bye", (user, newCount) => {
     addMessage(`${user} left`);
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} has ${newCount}`;
 });
 
 socket.on("new_message", addMessage); // have to study more on this part
+
+//socket.on("room_change", (msg) => console.log(msg));
+// console.log == (msg) => console.log(msg)
+
+socket.on("room_change", (rooms) => {
+    const roomList = welcome.querySelector("ul");
+    let roomAvail = welcome.querySelector("h4");
+    roomList.innerHTML = "";
+
+    // if no rooms are available, display the message
+    if(rooms.length == 0){
+        roomAvail.innerText = "No rooms are Available at the moment";
+        return;
+    };
+
+    // if we have available rooms
+    roomAvail.innerText = "Current Available Rooms";
+    rooms.forEach((room)=>{
+        const li = document.createElement("li");
+        li.innerText = room;
+        roomList.append(li);
+    });
+});
