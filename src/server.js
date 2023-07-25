@@ -70,6 +70,7 @@ const sockets = [];
 
 
 // ======= Socket IO ======= //
+// ====== For Live Chat Feature ====== //
 const httpServer = http.createServer(app);
 const wsServer = new Server(httpServer, {
     cors: {
@@ -155,11 +156,8 @@ wsServer.on('connection', (socket) => {
     });
 
     
-})
-
-
+});
 
 httpServer.listen(3000, handleListen);
-// server.listen(3000, handleListen);
 
 
